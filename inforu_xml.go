@@ -3,6 +3,7 @@ package inforusms
 import (
 	"encoding/xml"
 	"fmt"
+	"net/http"
 	"net/url"
 	"os"
 	"strings"
@@ -63,16 +64,16 @@ type InforuXML struct {
 }
 
 // SendSMS sends the given SMS to InforU based on HTTP client
-func (x InforuXML) SendSMS(h HTTPHandler) error {
+func (x InforuXML) SendSMS(h HTTPHandler) (*http.Response, error) {
 	field := url.Values{}
 	buf, err := xml.Marshal(x)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	field.Set(HTTPArg, string(buf))
 	if strings.Contains(os.Getenv("SMSHTTPDEBUG"), "dump=true") {
 		fmt.Printf(">>>> dump XML: %s\n", buf)
 	}
-	_, err = h.DoHTTP(HTTPMethod, HTTPContentType, HTTPSAPIAddress, field, []byte(field.Encode()))
-	return err
+	resp, err := h.DoHTTP(HTTPMethod, HTTPContentType, HTTPSAPIAddress, field, []byte(field.Encode()))
+	return resp, err
 }
