@@ -3,6 +3,7 @@ package inforusms
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -13,11 +14,10 @@ import (
 // HTTPHandler perform HTTP actions, and implement
 type HTTPHandler struct {
 	Client *http.Client
-	Server *http.Server
 }
 
-// SendSMS sends an HTTP Request for sending an SMS
-func (h HTTPHandler) SendSMS(
+// DoHTTP sends an HTTP Request for sending an SMS
+func (h HTTPHandler) DoHTTP(
 	method, contentType, address string, fields url.Values, body []byte) (resp *http.Response, err error) {
 
 	var request *http.Request
@@ -54,10 +54,35 @@ func (h HTTPHandler) SendSMS(
 		fmt.Printf(">>>> dump response: %s \nerr: %s\n", dump, err)
 	}
 
+	var respBody []byte
+	respBody, err = ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusOK {
+		var status XMLResponse
+		status, err = FromXMLResponse(respBody)
+		if err != nil {
+			return
+		}
+		if status.Status != StatusOK {
+			err = ToError(status)
+		}
+	}
+
 	return
 }
 
-// OnGettingSMS is an HTTP server handler when incoming SMS arrives
-func (h HTTPHandler) OnGettingSMS(path string, httpHandler http.HandlerFunc) {
+// OnGettingSMS is an HTTP server handler when incoming SMS arrives.
+// If mux exists, it will use it for a server, otherwise it will
+// use http.HandleFunc.
+func (h HTTPHandler) OnGettingSMS(path string, mux *http.ServeMux, httpHandler http.HandlerFunc) {
+	if mux != nil {
+		mux.HandleFunc(path, httpHandler)
+		return
+	}
 
+	http.HandleFunc(path, httpHandler)
 }

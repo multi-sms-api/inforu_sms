@@ -16,3 +16,12 @@ type XMLResponse struct {
 	Description        string         `xml:"Description"`
 	NumberOfRecipients int64          `xml:"NumberOfRecipients"`
 }
+
+// FromXMLResponse turns the body to XMLResponse, or error if something bad
+// happened
+func FromXMLResponse(buf []byte) (XMLResponse, error) {
+	var response XMLResponse
+
+	err := xml.Unmarshal(buf, &response)
+	return response, err
+}
