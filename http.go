@@ -54,6 +54,10 @@ func (h HTTPHandler) DoHTTP(
 		fmt.Printf(">>>> dump response: %s \nerr: %s\n", dump, err)
 	}
 
+	if resp.Body == nil {
+		return
+	}
+
 	var respBody []byte
 	respBody, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
