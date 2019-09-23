@@ -48,7 +48,7 @@ func sendSMS() (*http.Response, error) {
 		},
 		Settings: inforusms.Settings{
 			Sender:                  fromNumber,
-			DeliveryNotificationURL: "http://62.219.162.140/get_sms",
+			DeliveryNotificationURL: "http://127.0.0.1:80/get_sms",
 			CustomerMessageID:       "1",
 			CustomerParameter:       fmt.Sprintf("test1-%s", time.Now()),
 		},
