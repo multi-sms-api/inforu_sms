@@ -33,7 +33,7 @@ func init() {
 	}
 }
 
-func sendSMS() error {
+func sendSMS() (*http.Response, error) {
 	xmlToSend := inforusms.InforuXML{
 		Auth: inforusms.UserAuth{
 			UserName: userName,
@@ -41,7 +41,7 @@ func sendSMS() error {
 		},
 		Content: inforusms.Content{
 			Type:    "sms",
-			Message: "Test1",
+			Message: "Test1 עם עברית",
 		},
 		Recipients: inforusms.Recipients{
 			PhoneNumber: toNumber,
@@ -49,6 +49,8 @@ func sendSMS() error {
 		Settings: inforusms.Settings{
 			Sender:                  fromNumber,
 			DeliveryNotificationURL: "http://62.219.162.140/get_sms",
+			CustomerMessageID:       "1",
+			CustomerParameter:       fmt.Sprintf("test1-%s", time.Now()),
 		},
 	}
 
@@ -59,13 +61,25 @@ func serveHTTP() {
 	fmt.Println(http.ListenAndServe(fmt.Sprintf(":%s", callbackPort), nil))
 }
 
+func callback(w http.ResponseWriter, r *http.Request, info *inforusms.DeliveryInfo, err error) {
+	if err != nil {
+		panic(err)
+	}
+	if info != nil {
+		fmt.Printf("Full struct: %+v\n", *info)
+	}
+	done <- true
+}
+
 func main() {
-
 	done = make(chan bool)
-
-	inforusms.Callback(handler, "/get_sms", nil, nil)
-
+	inforusms.Callback(handler, "/get_sms", nil, callback)
 	go serveHTTP()
-	fmt.Println(sendSMS())
+	fmt.Printf("Going to send sms: ")
+	_, err := sendSMS()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Done, waiting for delivery report.")
 	<-done
 }

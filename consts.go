@@ -195,3 +195,10 @@ func (ds *DeliveryStatus) Scan(src interface{}) error {
 
 	return nil
 }
+
+// DeliveryStatusFromString initialize DeliveryStatus based on string parsing.
+// If failed it returns 0
+func DeliveryStatusFromString(str string) DeliveryStatus {
+	i := strToInt(str, 16)
+	return DeliveryStatus(i)
+}
