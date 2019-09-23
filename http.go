@@ -46,6 +46,21 @@ func (h HTTPHandler) DoHTTP(
 
 	resp, err = h.Client.Do(request.WithContext(ctx))
 
+	if err != nil {
+		if strings.Contains(os.Getenv("SMSHTTPDEBUG"), "dump=true") {
+			fmt.Printf("Error was given: %s", err)
+		}
+		return
+	}
+
+	if resp == nil {
+		err = fmt.Errorf("resp is nil")
+		if strings.Contains(os.Getenv("SMSHTTPDEBUG"), "dump=true") {
+			fmt.Println("resp is nil")
+		}
+		return
+	}
+
 	if strings.Contains(os.Getenv("SMSHTTPDEBUG"), "dump=true") {
 		dump, err := httputil.DumpRequestOut(request, true)
 		fmt.Printf(">>>> dump request: %s \nerr: %s\n", dump, err)
@@ -55,6 +70,7 @@ func (h HTTPHandler) DoHTTP(
 	}
 
 	if resp.Body == nil {
+		err = fmt.Errorf("resp.body is nil")
 		return
 	}
 
