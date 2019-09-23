@@ -59,7 +59,6 @@ func (h HTTPHandler) DoHTTP(
 	if err != nil {
 		return
 	}
-	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusOK {
 		var status XMLResponse
