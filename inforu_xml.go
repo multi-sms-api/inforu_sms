@@ -74,6 +74,6 @@ func (x InforuXML) SendSMS(h HTTPHandler) (*http.Response, error) {
 	if strings.Contains(os.Getenv("SMSHTTPDEBUG"), "dump=true") {
 		fmt.Printf(">>>> dump XML: %s\n", buf)
 	}
-	resp, err := h.DoHTTP(HTTPMethod, HTTPContentType, HTTPSAPIAddress, field, []byte(field.Encode()))
+	resp, err := h.DoHTTP(HTTPMethod, HTTPContentType, HTTPSAPIAddress, nil, []byte(field.Encode()))
 	return resp, err
 }
