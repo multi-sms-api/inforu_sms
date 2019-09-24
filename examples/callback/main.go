@@ -13,6 +13,7 @@ var (
 	userName, password   string
 	fromNumber, toNumber string
 	callbackPort         string
+	callbackAddress      string
 	client               http.Client
 	handler              inforusms.HTTPHandler
 )
@@ -25,6 +26,7 @@ func init() {
 	fromNumber = os.Getenv("INFORU_FROM_NUMBER")
 	toNumber = os.Getenv("INFORU_TO_NUMBER")
 	callbackPort = os.Getenv("INFORU_PORT")
+	callbackAddress = os.Getenv("INFORU_ADDRESS")
 	client = http.Client{
 		Timeout: time.Second * 15,
 	}
@@ -41,14 +43,14 @@ func sendSMS() (*http.Response, error) {
 		},
 		Content: inforusms.Content{
 			Type:    "sms",
-			Message: "Test1 עם עברית",
+			Message: `Test1 לשליחה מאוד ארוכה של סמס, עם הרבה מאוד מלל ולא רק כמה תווים. מה עוד אפשר לבדוק האם זה עובד או לא. האם ככול שהטקסט יותר ארוך ככה יהיו בעיות? Maybe some English text as well to make it work harder and making sure that we have a very long text message, and see if there will be any issues with it, so we knows that too many fragments are bad for us. What do you think?`,
 		},
 		Recipients: inforusms.Recipients{
 			PhoneNumber: toNumber,
 		},
 		Settings: inforusms.Settings{
 			Sender:                  fromNumber,
-			DeliveryNotificationURL: "http://127.0.0.1:80/get_sms",
+			DeliveryNotificationURL: callbackAddress,
 			CustomerMessageID:       "1",
 			CustomerParameter:       fmt.Sprintf("test1-%s", time.Now()),
 		},
@@ -58,7 +60,9 @@ func sendSMS() (*http.Response, error) {
 }
 
 func serveHTTP() {
-	fmt.Println(http.ListenAndServe(fmt.Sprintf(":%s", callbackPort), nil))
+	listenTo := fmt.Sprintf(":%s", callbackPort)
+	fmt.Println("Going to listen on: ", listenTo)
+	fmt.Println(http.ListenAndServe(listenTo, nil))
 }
 
 func callback(w http.ResponseWriter, r *http.Request, info *inforusms.DeliveryInfo, err error) {

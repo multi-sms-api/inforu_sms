@@ -13,5 +13,5 @@ type Settings struct {
 	MaxSegments             int      `xml:"MaxSegments,omitempty"`
 	DelayInSeconds          int64    `xml:"DelayInSeconds,omitempty"`
 	DeliveryNotificationURL string   `xml:"DeliveryNotificationUrl,omitempty"`
-	Priority                int      `xml:"priority, omitempty"`
+	Priority                int      `xml:"priority,omitempty"`
 }
