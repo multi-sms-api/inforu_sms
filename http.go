@@ -1,6 +1,7 @@
 package inforusms
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io/ioutil"
@@ -21,14 +22,20 @@ func (h HTTPHandler) DoHTTP(
 	method, contentType, address string, fields url.Values, body []byte) (resp *http.Response, err error) {
 
 	var request *http.Request
+	var bodyReader *bytes.Reader
 
-	fullAddress := fmt.Sprintf("%s?%s", address, fields.Encode())
+	fullAddress := fmt.Sprintf("%s", address)
+
+	if body != nil {
+		bodyReader = bytes.NewReader(body)
+	}
 
 	switch method {
 	case http.MethodGet:
-		request, err = http.NewRequest(http.MethodGet, fullAddress, nil)
+		fullAddress = fmt.Sprintf("%s?%s", fullAddress, fields.Encode())
+		request, err = http.NewRequest(http.MethodGet, fullAddress, bodyReader)
 	case http.MethodPost:
-		request, err = http.NewRequest(http.MethodPost, fullAddress, nil)
+		request, err = http.NewRequest(http.MethodPost, fullAddress, bodyReader)
 	}
 
 	if err != nil {
