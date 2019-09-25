@@ -48,7 +48,7 @@ func TestSendSMSHTTP(t *testing.T) {
 		},
 	}
 
-	err := xmlToSend.SendSMS(handler)
+	_, err := xmlToSend.SendSMS(handler)
 	if err != nil {
 		t.Errorf("Error sending SMS: %s", err)
 	}
