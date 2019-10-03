@@ -22,16 +22,14 @@ type XMLResponse struct {
 
 // FromXMLResponse turns the body to XMLResponse, or error if something bad
 // happened
-func FromXMLResponse(buf []byte) (XMLResponse, error) {
-	var response XMLResponse
-
-	err := xml.Unmarshal(buf, &response)
-	return response, err
+func (r *XMLResponse) FromXMLResponse(buf []byte) error {
+	err := xml.Unmarshal(buf, r)
+	return err
 }
 
 // ToError converts XMLResponse to SMSError. If everything is ok, it will return
 // nil
-func (r XMLResponse) ToError() *SMSError {
+func (r XMLResponse) ToError() error {
 	if r.Status == StatusOK {
 		return nil
 	}
