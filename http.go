@@ -9,14 +9,14 @@ import (
 
 // HTTPHandler perform HTTP actions, and implement
 type HTTPHandler struct {
-	smshandler.HTTPHandler
+	Client *http.Client
 }
 
 // DoHTTP sends an HTTP Request for sending an SMS
 func (h HTTPHandler) DoHTTP(
 	method, contentType, address string, fields url.Values, body []byte) (resp *http.Response, err error) {
-	var response *XMLResponse
-	return smshandler.DoHTTP(h.HTTPHandler.Client, method, contentType, address, fields, body, response)
+	response := &XMLResponse{}
+	return smshandler.DoHTTP(h.Client, method, contentType, address, fields, body, response)
 }
 
 // OnGettingSMS is an HTTP server handler when incoming SMS arrives.
