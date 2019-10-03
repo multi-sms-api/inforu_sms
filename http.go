@@ -9,7 +9,7 @@ import (
 
 // HTTPHandler perform HTTP actions, and implement
 type HTTPHandler struct {
-	Client *http.Client
+	smshandler.HTTPHandler
 }
 
 // DoHTTP sends an HTTP Request for sending an SMS
