@@ -5,10 +5,12 @@ import (
 	"net/http"
 	"os"
 	"strings"
+
+	"github.com/ik5/smshandler"
 )
 
 // Callback for having callback function
-func Callback(h HTTPHandler, path string, mux *http.ServeMux,
+func Callback(h smshandler.HTTPHandler, path string, mux *http.ServeMux,
 	onCallback func(http.ResponseWriter, *http.Request, *DeliveryInfo, error)) {
 
 	handleCallback := func(w http.ResponseWriter, r *http.Request) {
