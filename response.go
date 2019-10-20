@@ -2,6 +2,7 @@ package inforusms
 
 import (
 	"encoding/xml"
+	"errors"
 	"strings"
 )
 
@@ -20,11 +21,16 @@ type XMLResponse struct {
 	NumberOfRecipients int64          `xml:"NumberOfRecipients"`
 }
 
-// FromXMLResponse turns the body to XMLResponse, or error if something bad
+// FromXMLResponse convert the body to XMLResponse, or error if something bad
 // happened
 func (r *XMLResponse) FromXMLResponse(buf []byte) error {
 	err := xml.Unmarshal(buf, r)
 	return err
+}
+
+// FromJSONResponse return an error when called, but implemented due to interface
+func (r *XMLResponse) FromJSONResponse(buf []byte) error {
+	return errors.New("JSON is not supported by XMLResponse")
 }
 
 // ToError converts XMLResponse to SMSError. If everything is ok, it will return
