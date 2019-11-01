@@ -1,2 +1,4 @@
+github.com/ik5/inforu_sms v0.0.22 h1:INUUMRPm/OkZZxXC34AEaBDdctSDBA7uL2nJ1ccTgII=
+github.com/ik5/inforu_sms v0.0.22/go.mod h1:r8jOoY8dM8mdWlBLGle+I3WAonNLM+PUMBfyw1s0Uf4=
 github.com/multi-sms-api/smshandler v0.0.17 h1:MAB+g6zvoNpg9u/AiFk0NTHxllyd8FnfkOJgU4z19pI=
 github.com/multi-sms-api/smshandler v0.0.17/go.mod h1:iDEQRZ8q0VQM81cFr35S9BO+alRgCxrDZ5IvReEQ7Z8=

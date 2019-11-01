@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	inforusms "github.com/ik5/inforu_sms"
+	inforusms "github.com/multi-sms-api/inforu_sms"
 )
 
 var (
