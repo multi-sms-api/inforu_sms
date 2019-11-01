@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/ik5/smshandler"
+	"github.com/multi-sms-api/smshandler"
 )
 
 // HTTPHandler perform HTTP actions, and implement

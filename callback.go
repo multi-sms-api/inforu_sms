@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ik5/smshandler"
+	"github.com/multi-sms-api/smshandler"
 )
 
 // Callback for having callback function
